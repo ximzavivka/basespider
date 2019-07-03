@@ -1,6 +1,5 @@
-import asyncio
 import os
-
+import asyncio
 import uvloop
 
 from aiohttp import web
