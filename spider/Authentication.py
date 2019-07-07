@@ -12,6 +12,7 @@
 # В ответ получает: access_token == JWT
 # access_token передается в HTTP заголовке, при обращении к ресурсам
 # На стороне api-gateway проверяется и проксируется на нужный ресурс
+import asyncio
 import jwt
 
 from exceptions import ResourceUnavailable, AuthorizationFailed
@@ -49,6 +50,7 @@ class Authentication:
         """
         self.access_token = None
         self.public_key = None
+        self.loop = asyncio.get_event_loop()
 
     @classmethod
     def check_resource(cls):

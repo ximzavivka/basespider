@@ -5,11 +5,16 @@ import uvloop
 e = os.environ.get
 
 
-async def app():
-    pass
+async def main(interface):
+    """Цикл событий"""
+    # Запустить интерфейс
+    interface = interface()
+
+    # Запустить задачу
+    await interface.start()
 
 
-def start_app(appinterface=None, iterator=None):
+def start_app(interface):
     # Ждем запуска зависимых компонентов
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
     loop = asyncio.get_event_loop()
@@ -18,7 +23,7 @@ def start_app(appinterface=None, iterator=None):
         asyncio.wait([
             # Задачи вставлять сюда, обернутые в loop.create_task
             loop.create_task(
-                app()
+                main(interface)
             )
         ])
     )

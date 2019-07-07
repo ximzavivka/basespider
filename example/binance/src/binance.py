@@ -8,11 +8,8 @@ class MainInterface(WS):
     def address(self):
         return ''
 
-    def receiver(self):
+    async def receiver(self, data):
         """Описание потребителя данных"""
 
 
-async def task_generator():
-    pass
-
-start_app(main, interface=MainInterface)
+start_app(MainInterface)
