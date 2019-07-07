@@ -8,10 +8,9 @@ e = os.environ.get
 
 # Ресурсы
 #
-# Получение данных / отправка результатов происходит через NGINX
-# NGINX принимает запросы, занимается балансировкой и содержанием коннектов к ресурсам
-#
-# Дескриптор оборачивает запросы, расшифровывет результаты
+# Выполняет запросы на nginx, сохраняющий данные
+# Создается несколько воркеров для выполнения запросов очереди
+# Очередь реализует буффер для хранения запросов
 
 
 class Resource:
@@ -24,26 +23,25 @@ class Resource:
 
         return cls.__instance
 
-    def __init__(self):
+    def __init__(self, queue):
         self.loop = asyncio.get_event_loop()
-        self.queue = asyncio.Queue()
+        self.queue = queue
 
-    def __call__(self, *args, **kwargs):
-        while True:
-            task = self.queue.get_nowait()
-
-    def read_status(self, status):
+    async def wrap_request(self, request):
         """Обработка статуса, вернувшегося результата"""
-        if status == 500:
-            pass
+        if request.status == 500:
+            await asyncio.sleep(1)  # Ожидание между запросами с ошибкой
+            await self.queue.put_nowait(data)
 
-    @Statistics()
+    @Statistics
     async def post(self, data):
         """Отправка данных источника"""
-        async with aiohttp.ClientSession() as session:
-            async with session.post(Resource.RESOURCE_HOST) as resp:
-                self.read_status(resp.status)
+        await self.queue.put_nowait(data)
 
-    async def stream(self):
+    @classmethod
+    async def stream(cls, queue):
         """Процесс обработки очереди"""
-        pass
+        async with aiohttp.ClientSession() as session:
+            while True:
+                async with session.post(Resource.RESOURCE_HOST, data=await queue.get_nowait()) as resp:
+                    return resp

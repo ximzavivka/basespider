@@ -2,7 +2,11 @@ import os
 import asyncio
 import uvloop
 
+from Resource import Resource
+
 e = os.environ.get
+
+queue = asyncio.Queue()
 
 
 async def main(interface):
@@ -19,13 +23,15 @@ def start_app(interface):
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
     loop = asyncio.get_event_loop()
 
+    app = [main(interface)]  # Задачи вставлять сюда
+
+    for i in range(e('RESOURCE_WORKERS', 80)):
+        app.append(Resource.stream(queue))
+
     loop.run_until_complete(
-        asyncio.wait([
-            # Задачи вставлять сюда, обернутые в loop.create_task
-            loop.create_task(
-                main(interface)
-            )
-        ])
+        asyncio.wait(
+            map(loop.create_task, app)
+        )
     )
 
     loop.close()

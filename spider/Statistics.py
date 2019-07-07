@@ -12,10 +12,9 @@ class Statistics:
 
         return cls.__instance
 
-    def __init__(self):
+    def __init__(self, func):
         self.date = time.time()
+        self.func = func
 
-    def __call__(self, func):
-        async def wrap():
-            return await func()
-        return wrap
+    async def __call__(self, *args, **kwargs):
+        await self.func(*args, **kwargs)

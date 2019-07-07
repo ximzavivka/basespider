@@ -23,13 +23,12 @@ class BaseInterface:
 
     async def receiver(self, data):
         """Что делать, когда получаешь данные"""
-
         raise NotImplementedError
 
     @authentication
     async def __receiver(self, *args, **kwargs):
         """Обертка для получения данных и отправки в ресурс"""
-        await self.resource.post(await self.receiver(*args, **kwargs)) # Отправка данных
+        await self.resource.post(await self.receiver(*args, **kwargs))
 
 
 class WS(BaseInterface):
@@ -40,3 +39,5 @@ class WS(BaseInterface):
 
 class HTTP(BaseInterface):
     """Интерфейс для http запросов"""
+    async def start(self):
+        pass
