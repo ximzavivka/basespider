@@ -1,7 +1,7 @@
 # Обернуть запрос декоратор
 
-from Authentication import Authentication, authentication
-from exceptions import AuthorizationFailed
+from base.authentication import Authentication, authentication
+from utils.exceptions import AuthorizationFailed
 
 
 @authentication

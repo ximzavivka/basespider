@@ -1,5 +1,5 @@
 # Собирает данные из WS
-from Interface import WS
+from base.interface import WS
 from spider.spider import start_app
 
 

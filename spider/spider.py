@@ -2,7 +2,7 @@ import os
 import asyncio
 import uvloop
 
-from Resource import Resource
+from base.resource import Resource
 
 e = os.environ.get
 
