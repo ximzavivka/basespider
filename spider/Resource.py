@@ -1,8 +1,6 @@
 import asyncio
 import os
 
-from spider.Network import Request
-
 e = os.environ.get
 
 # Ресурсы
@@ -14,13 +12,10 @@ e = os.environ.get
 
 
 class Resource:
-    """Дескриптор для обращение к ресурсам
-    Обертывает работу с NGINX как api-gateway
-    """
-    RESOURCE_HOST = 'localhost'
+    """Обращение к внутренним ресурсам"""
+    RESOURCE_HOST = e('RESOURCE_HOST', 'localhost')
 
     def __init__(self, loop):
-        self.network = Request(loop)
         self.queue = asyncio.Queue()
 
     def get(self, url, params: dict, method="GET"):

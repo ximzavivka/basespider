@@ -1,6 +1,6 @@
 # Обернуть запрос декоратор
 
-from spider.Authentication import Authentication, authentication
+from Authentication import Authentication, authentication
 from exceptions import AuthorizationFailed
 
 

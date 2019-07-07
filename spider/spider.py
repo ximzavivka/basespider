@@ -3,14 +3,14 @@ import os
 
 import uvloop
 
-from aiohttp import web
-
-from spider.Resource import Resource
-
 e = os.environ.get
 
 
-def start_app(app):
+async def app():
+    pass
+
+
+def start_app(appinterface=None, iterator=None):
     # Ждем запуска зависимых компонентов
     asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
     loop = asyncio.get_event_loop()
@@ -19,13 +19,13 @@ def start_app(app):
         asyncio.wait([
             # Задачи вставлять сюда, обернутые в loop.create_task
             loop.create_task(
-                app(
-                    loop,
-                    aiohttp=web.Application(loop=loop),
-                    resource=Resource(loop)
-                )
+                app()
             )
         ])
     )
 
     loop.close()
+
+# TODO: Подключить sentry и чтобы у используемых проектов были свои ключи
+# TODO: Сделать Pip пакетом
+# TODO: Подключить Jaeger
