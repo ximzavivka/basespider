@@ -23,6 +23,9 @@ def test_authentication_denied():
     else:
         assert False, "Ошибки авторизации не было"
 
+
+def test_jwt_decode(public_key):
+    pass
+
 # Проверить отказ авторизации
 # Проверить заполнение access_token
-# Проверить поведение при устаревании ключа
