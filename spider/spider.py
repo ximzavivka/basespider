@@ -1,6 +1,5 @@
-import asyncio
 import os
-
+import asyncio
 import uvloop
 
 e = os.environ.get
