@@ -6,7 +6,7 @@ from base.resource import Resource
 
 e = os.environ.get
 
-queue = asyncio.Queue()
+
 
 
 async def main(interface):
@@ -26,7 +26,7 @@ def start_app(interface):
     app = [main(interface)]  # Задачи вставлять сюда
 
     for i in range(e('RESOURCE_WORKERS', 80)):
-        app.append(Resource.stream(queue))
+        app.append(Resource.stream())
 
     loop.run_until_complete(
         asyncio.wait(

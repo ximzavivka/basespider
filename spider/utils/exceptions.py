@@ -14,3 +14,9 @@ class ResourceUnavailable(Exception):
     def __init__(self, expression):
         self.expression = expression
         self.message = "Ресурс не доступен"
+
+
+class ValuesInvalid(Exception):
+    def __init__(self, expression):
+        self.expression = expression
+        self.message = "Ресурс не доступен"
