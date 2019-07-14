@@ -25,7 +25,6 @@ class BaseInterface:
         """Что делать, когда получаешь данные"""
         raise NotImplementedError
 
-    @authentication
     async def __receiver(self, *args, **kwargs):
         """Обертка для получения данных и отправки в ресурс"""
         await self.resource.post(await self.receiver(*args, **kwargs))
