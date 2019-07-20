@@ -10,12 +10,10 @@ e = os.environ.get
 
 # Ресурсы
 
-# Создает N воркеров
-# Объявляется вместе со стартом работы
-# Задачи на выполнение кладутся в resource_queue
-# В случае 200 кода в ответ -- удаляет задание из очереди
-# Работает как синглтон
-# Реализует интерфейс работы с очередью
+# Дескриптор для работы с внешними ресурсами
+# Оборачивает работу, выполняет авторизацию/ведение статистики/исполнение Promise
+# Читает коды, регистрирует ответы ресурсов
+# Общается с контроллером, для исполнения задач сети
 
 
 def validate(func):
@@ -30,25 +28,13 @@ def validate(func):
 class Resource:
     """Обращение к внутренним ресурсам"""
     RESOURCE_HOST = e('RESOURCE_HOST', 'localhost')
-    __instance = None
 
-    # Первичная валидация поступающих данных
-    # Упаковка данных в HTTP
-    # Чтение кодов ответа
-
-    def __new__(cls, *args, **kwargs):
-        if not cls.__instance:
-            cls.__instance = super().__new__(cls, *args, **kwargs)
-            cls.__instance.__queue = asyncio.Queue(maxsize=1200)
-
-        return cls.__instance
-
-    def __init__(self):
-        pass
+    def __init__(self, controller):
+        self.controller = controller
 
     @authentication
     async def get_task(self):
-        return await self.__queue.get()
+        return await self.controller.get_task()
 
     @validate
     async def put_task(self, data):
@@ -71,9 +57,12 @@ class Resource:
         else:
             self.__queue.task_done()
 
-    @classmethod
-    async def stream(cls):
+    async def stream(self):
         async with aiohttp.ClientSession() as session:
             while True:
-                async with session.post(Resource.RESOURCE_HOST, data=await cls().get_task()) as resp:
-                    await cls().finalizer(resp)
+                async with session.post(
+                        self.RESOURCE_HOST,
+                        headers=authentication(),
+                        data=await self.get_task()
+                ) as resp:
+                    await self.finalizer(resp)

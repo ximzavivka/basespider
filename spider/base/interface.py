@@ -1,20 +1,14 @@
 # Подключение к источникам потребления
-import asyncio
-
-from base.authentication import Authentication, authentication
 from base.resource import Resource
 
 
 class BaseInterface:
     def __init__(self):
-        self.loop = asyncio.get_event_loop()
-        self.resource = Resource()
-        self.authentication = Authentication()
+        pass
 
     @property
     def address(self):
-        """Полный адресс источника
-        Этот адресс берется для объявления источника"""
+        """Полный адресс источника"""
         raise NotImplementedError
 
     async def start(self):
@@ -27,13 +21,13 @@ class BaseInterface:
 
     async def __receiver(self, *args, **kwargs):
         """Обертка для получения данных и отправки в ресурс"""
-        await self.resource.post(await self.receiver(*args, **kwargs))
+        await Resource().put_task(await self.receiver(*args, **kwargs))
 
 
 class WS(BaseInterface):
     """Интерфейс для ws подключения к источнику"""
     async def start(self):
-        pass
+        await self.__receiver()
 
 
 class HTTP(BaseInterface):

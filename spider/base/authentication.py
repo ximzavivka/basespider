@@ -21,8 +21,6 @@ from utils.exceptions import ResourceUnavailable, AuthorizationFailed
 class Authentication:
     """Система аутентификаци/авторизации
     Оборачивает запросы к ресурсам"""
-    __instance = None
-
     AUTHOR = None
 
     LIBRARY_VERSION = None
@@ -34,12 +32,6 @@ class Authentication:
     AUTH_HOST = None  # Сервер авторизации
     ACCESS_TOKEN = None
     PUBLIC_KEY = None
-
-    def __new__(cls, *args, **kwargs):
-        if not cls.__instance:
-            cls.__instance = super().__new__(cls, *args, **kwargs)
-
-        return cls.__instance
 
     def __init__(self):
         """Выполняет аутентификацию
