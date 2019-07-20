@@ -11,6 +11,7 @@ import os
 
 import uvloop
 
+from base.controller.status import StatusMixin
 from base.interface import BaseInterface
 from base.resource import Resource
 from base.scenario import BaseScenario
@@ -21,11 +22,8 @@ e = os.environ.get
 asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
 
-class Controller:
+class Controller(StatusMixin):
     RESOURCE_WORKERS = e('RESOURCE_WORKERS', 1)  # Количество потоков выполения запросов ресурса
-    STATUS = dict(
-        EMPTY="Controller didn't start",
-    )
 
     @staticmethod
     def generate_start_token():
@@ -50,11 +48,13 @@ class Controller:
 
     def set_task(self, task):
         # Включение задачи при старте
-        self.__tasks.append(
-            self.loop.create_task(
-                task
+        # Проверка состояния
+        if self.is_empty():
+            self.__tasks.append(
+                self.loop.create_task(
+                    task
+                )
             )
-        )
 
     async def get_task(self):
         return await asyncio.sleep(1)
