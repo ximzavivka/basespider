@@ -9,6 +9,7 @@
 import asyncio
 import os
 
+from base.context import Context
 from base.controller.eventloop import StartMixin
 from base.controller.status import StatusMixin
 from base.interface import BaseInterface
@@ -33,18 +34,22 @@ class Controller(StatusMixin, StartMixin):
         self.loop = asyncio.get_event_loop()
         self.__tasks = []
         # Логика
-        self.interface = interface  # Интерфейс реализует команды, используемые сценарием
-        self.scenario = scenario(interface=self.interface)  # Цикл, выполняющий логику поведения
+        self.scenario = scenario(interface=interface)  # Цикл, выполняющий логику поведения
         self.statistics = Statistics(self)  # Объект для записи статистики
         # Механика
         self.network_iterator = None
         self.token = self.generate_start_token()
         self.status = "EMPTY"
+        self.queue = asyncio.Queue()
 
     async def get_task(self):
         # Получение сетевого задания
-        return await asyncio.sleep(1)
+        # Проверить состояние
+        return await self.queue.get()
 
-    async def set_task(self):
-        # Установить сетевую задачу
-        return await asyncio.sleep(1)
+    async def set_task(self, task):
+        # Поставить сетевую задачу
+        # Проверить состояние
+        assert issubclass(task, Context), "Поставленные задачи должны быть обернуты в контекст"
+
+        return await self.queue.put_nowait(task)
