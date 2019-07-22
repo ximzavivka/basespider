@@ -7,6 +7,7 @@ e = os.environ.get
 # TODO: Подключить sentry и чтобы у используемых проектов были свои ключи
 # TODO: Сделать Pip пакетом
 # TODO: Подключить Jaeger
+# TODO: Логгирование в Kibana
 
 
 def start_app(interface=None, scenario=None):

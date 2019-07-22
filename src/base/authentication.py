@@ -15,7 +15,7 @@
 import asyncio
 import jwt
 
-from utils.exceptions import ResourceUnavailable, AuthorizationFailed
+from utils.exceptions import ResourceUnavailable, InternalAuthorizationFailed
 
 
 class Authentication:
@@ -56,7 +56,7 @@ class Authentication:
     async def get_token(cls):
         # Получение токена из AUTH_HOST
         # Если не получится -- вызвать исключение
-        raise AuthorizationFailed
+        raise InternalAuthorizationFailed
 
     @classmethod
     async def authentication(cls):

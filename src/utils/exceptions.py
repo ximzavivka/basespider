@@ -4,10 +4,15 @@ class InitException(Exception):
         self.message = "Компонент не доступен"
 
 
-class AuthorizationFailed(Exception):
+class InternalAuthorizationFailed(Exception):
     def __init__(self, expression):
         self.expression = expression
         self.message = "Авторизация компонента недоступна"
+
+
+class ExternalAuthorizationFailed(Exception):
+    def __init__(self):
+        self.message = "Перед запросом нужно авторизовать сеть"
 
 
 class ResourceUnavailable(Exception):

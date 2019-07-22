@@ -1,9 +1,7 @@
 import os
-import asyncio
 import aiohttp
 
 from base.authentication import authentication
-from base.statistics import Statistics
 from utils.exceptions import ValuesInvalid, ResourceFail
 
 e = os.environ.get
@@ -26,7 +24,7 @@ def validate(func):
 
 
 class Resource:
-    """Обращение к внутренним ресурсам"""
+    """Оборачивает дерево Context и выполняет все запросы, которые содержаться в нем"""
     RESOURCE_HOST = e('RESOURCE_HOST', 'localhost')
 
     def __init__(self, controller):

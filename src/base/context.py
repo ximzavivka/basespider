@@ -1,11 +1,10 @@
 # Объект контекста задачи
 # Оборачивает задачи, исполняемые интерфейсом
 # Должен работать таким образом, чтобы:
-# - При асинхронной работе небыло лага между выполнениями задач
 # - В любой момент можно было скормить объект контекста и сценарий вернется к старому состоянию
 
 
-class Context:
+class BaseContext:
     # Дерево выполнения задач
     __interface = None
 
@@ -15,7 +14,9 @@ class Context:
             cls.__instance.playbook = dict()
         return cls.__instance
 
-    def __init__(self, task=None):
-        self.parent = None
-        self.child = None
+    def __init__(self):
+        pass
 
+
+class Context(BaseContext):
+    pass
